@@ -1,6 +1,6 @@
 # 1. Installation
-Create a new Github account
-Create a new Cloud9 account
+Create a new Github account<br/>
+Create a new Cloud9 account<br/>
 Create a blank workspace on Cloud9
 ## Setting Up Starter Rails 5 App
 Check ruby version (if installed):
@@ -19,7 +19,7 @@ Check rails version:
 ```
 rails -v
 ```
-Create a new rails app with a Postgresql database:
+Create a new rails app with a Postgresql database:<br/>
 (rather than default SQLite3 database)
 ```
 rails new first_app --database=postgresql
@@ -43,7 +43,7 @@ Add the following to config/environments/development.rb:
 # define default url options for mailer
 config.action_mailer.default_url_options = { host: ENV['IP'], port: ENV['PORT'] }
 ```
-Ensure you have root URL defined in config/routes.rb:
+Ensure you have root URL defined in config/routes.rb:<br/>
 (this route is not yet defined)
 ```
 Rails.application.routes.draw do
@@ -59,7 +59,7 @@ Ensure you have flash message in app/views/layouts/application.html.erb
 </body>
 ```
 ## Setting Up Postgresql Database
-Update development details with a username and host name in config/database.yml:
+Update development details with a username and host name in config/database.yml:<br/>
 (the username and host name are environment variables)
 ```
 development:
@@ -103,12 +103,12 @@ Run the rails server (using IP and PORT from the enivronment variables):
 ```
 rails s -b $IP -p $PORT
 ```
-Click on 'Share' near top right and copy the link to application URL:
-E.g. Mine is: https://davids-workspace-2-davidprovest.c9users.io
-It has the form: https://<workspace>-<username>.c9users.io
+Click on 'Share' near top right and copy the link to application URL:<br/>
+E.g. Mine is: https://davids-workspace-2-davidprovest.c9users.io<br/>
+It has the form: https://<workspace>-<username>.c9users.io<br/>
 It will have an error, let's resolve this now.
 ## Resolving Our Apps First Errors
-The error states:
+The error states:<br/>
 'uninitialized constant HomeController'
 ### Create a Home Controller
 Create a new file called home_controller.rb in app/controllers/ and add the following:
@@ -119,7 +119,7 @@ class HomeController < ActionController::Base
     end
 end
 ```
-The error now states:
+The error now states:<br/>
 'HomeController#index is missing a template ...'
 ### Create an Index View Template
 Create a new folder called home in app/views/.
@@ -127,15 +127,15 @@ Create a new file called index.html.erb in app/views/home/ and add the following
 ```
 Hello World!
 ```
-Awesome, no more errors!
+<strong>Awesome, no more errors!</strong><br/>
 ##Logging in as Admin User
-Create a link on the home page to the admin path.
+Create a link on the home page to the admin path.<br/>
 Add the following to the file app/views/home/index.html.erb:
 ```
 <%= link_to("Admin login", admin_root_path) %>
 ```
-When we seeded the database we added only a single, default admin user. 
-Look at the db/seeds.rb file and you can see the email: 'admin@example.com', password: 'password'.
+When we seeded the database we added only a single, default admin user. <br/>
+Look at the db/seeds.rb file and you can see the email: 'admin@example.com', password: 'password'.<br/>
 Use these credentials to login as an admin.
 ## Saving Progrees to GitHub
 ```
@@ -151,7 +151,7 @@ git remote add origin https://github.com/<git_username>/<git_repo_name>.git
 git push -u origin master
 ```
 
-Well done that is our first checkpoint! 
+<strong>Well done that is our first checkpoint!</strong><br/>
 To summarize we have: 
 * Created a cloud workspace (on an Ubunutu OS) 
 * Installed Ruby 2.4 and Rails 5+
