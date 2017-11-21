@@ -1,6 +1,6 @@
 # 1. Installation
-Create a new Github account<br/>
-Create a new Cloud9 account<br/>
+Create a new Github account. https://github.com/<br/>
+Create a new Cloud9 account. https://ide.c9.io<br/>
 Create a blank workspace on Cloud9
 ## Setting Up Starter Rails 5 App
 Check ruby version (if installed):
@@ -105,7 +105,7 @@ rails s -b $IP -p $PORT
 ```
 Click on 'Share' near top right and copy the link to application URL:<br/>
 E.g. Mine is: https://davids-workspace-2-davidprovest.c9users.io<br/>
-It has the form: https://<workspace>-<username>.c9users.io<br/>
+It has the form: https://`<workspace`>-`<username`>.c9users.io<br/>
 It will have an error, let's resolve this now.
 ## Resolving Our Apps First Errors
 The error states:<br/>
