@@ -1,4 +1,4 @@
-#1. Installation
+# 1. Installation
 Create a new Github account
 Create a new Cloud9 account
 Create a blank workspace on Cloud9
