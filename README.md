@@ -163,19 +163,3 @@ To summarize we have:
 * Created our first controller and view
 * Logged in as an admin user
 * Saved our progress to our GitHub repository 
-
-
-
-
-
-
-
-
-
-Start Postgresql (> sudo service postgresql start)
-Create a database (> psql -c "create database first_app_dev owner=ubuntu")
-Rails db:migrate
-Update database.yml development: username: <% ENV['C9_USER'] %> host: <% ENV['IP'] %>
-Click share then application to get the URL and see starter app running online (rails s -b $IP -p $PORT)
-Add to run configuration (change into correct folder) rails s -b $IP -p $PORT
-Link to Github and do initial commit
