@@ -137,6 +137,19 @@ Add the following to the file app/views/home/index.html.erb:
 When we seeded the database we added only a single, default admin user. 
 Look at the db/seeds.rb file and you can see the email: 'admin@example.com', password: 'password'.
 Use these credentials to login as an admin.
+## Saving Progrees to GitHub
+```
+git add .
+```
+```
+git commit -m "<my_first_commit_message>"
+```
+```
+git remote add origin https://github.com/<git_username>/<git_repo_name>.git
+```
+```
+git push -u origin master
+```
 
 Well done that is our first checkpoint! 
 To summarize we have: 
