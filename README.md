@@ -105,7 +105,7 @@ rails s -b $IP -p $PORT
 ```
 Click on 'Share' near top right and copy the link to application URL:<br/>
 E.g. Mine is: https://davids-workspace-2-davidprovest.c9users.io<br/>
-It has the form: https://`<workspace`>-`<username`>.c9users.io<br/>
+It has the form: https://`<workspace>`-`<username>`.c9users.io<br/>
 It will have an error, let's resolve this now.
 ## Resolving Our Apps First Errors
 The error states:<br/>
@@ -163,3 +163,107 @@ To summarize we have:
 * Created our first controller and view
 * Logged in as an admin user
 * Saved our progress to our GitHub repository 
+
+# 2. Understanding Model-View-Controller (MVC) Architecture
+## Adding Users
+We add users using Devise generator:
+```
+rails generate devise User
+```
+Look at the terminal and all the files that were created.<br/>
+They include a new migration file, model file (user.rb) and routes added for users.<br/>
+Update the migration file `<timestamp>`_devise_create_users.rb to include firstname and lastname columns:
+```
+create_table :users do |t|
+  ## Adding our own addtional columns to the User table
+  t.string :first_name, null: false
+  t.string :last_name, null: false
+```
+Run rails migration (to add the users table to the database):
+```
+rails db:migrate
+```
+As Devise added routes for our users, we should locate the sign-up route.
+Look for a URI that says /users/sign_up (it will be a GET request):
+```
+rails routes
+```
+Create a link on the home page for users to sign up.<br/>
+Add the following to the file app/views/home/index.html.erb:
+```
+<%= link_to("User Sign Up", new_user_registration_path) %>
+```
+Create a link on the home page for users to sign in.<br/>
+Add the following to the file app/views/home/index.html.erb:
+```
+<%= link_to("User Sign In", new_user_session_path) %>
+```
+## Creating a Default User
+Add a default user in the db/seeds.rb:
+```
+User.create!(email: 'harry@example.com', first_name: 'Harry', last_name: 'Potter', password: 'password', password_confirmation: 'password') if Rails.env.development?
+```
+We cannot run rails db:seed as we have a clash with data already in the database.
+`Validation failed: Email has already been taken.`
+This is because it is trying to seed the admin user again and the email is already used.
+We will reset the database instead (this will drop and the create fresh databases):
+```
+rails db:reset
+```
+At this time the databases will be dropped but fail to re-create.
+This is because we have a clash of templates:
+`PG::InvalidParameterValue: ERROR:  new encoding (UTF8) is incompatible with the encoding of the template database (SQL_ASCII)`
+`HINT:  Use the same encoding as in the template database, or use template0 as template.`
+Let's update the template to template0 (as suggested) in config/database.yml:
+```
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  template: template0
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+```
+Now lets create the databases (dev and test):
+```
+rails db:create
+```
+## Using Rails Console
+Check the user 'Harry Potter' is stored in the database.<br/>
+Start the rails console:
+```
+rails c
+```
+Then in the rails console search for all users (this does not include admin users):
+You should see 1 user with the details matching the seed details.
+```
+User.all
+```
+To check all admins in the database:
+```
+AdminUser.all
+```
+Exit the rails console:
+```
+quit
+```
+## Update Home Page View
+Finally, update the home page to resemble below:<br/>
+This is an if statement that will check if a user is signed in (using a method provided by Devise).<br/>
+Note we have added a sign out link which you can find the route again using rails routes command.<br/>
+The sign out is a button and requires an extra argument of 'method: delete' as it is not a GET request but rather a DELETE request.
+```
+<% if user_signed_in? %>
+    Signed In
+    <br />
+    <%= button_to('Logout', destroy_user_session_path, method: :delete) %>
+<% else %>
+    Not Signed In
+    <br />
+    <%= link_to("Admin login", admin_root_path) %>
+    <br />
+    <%= link_to("User Sign Up", new_user_registration_path) %>
+    <br />
+    <%= link_to("User Sign In", new_user_session_path) %>
+<% end %>
+```
+Now we should be able to login as a user with email: 'harry@example.com' and password: 'password'.
+The page will show we are logged in and provide a logout button that will should all the other links when we are logged out.
