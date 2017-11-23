@@ -183,7 +183,7 @@ Run rails migration (to add the users table to the database):
 ```
 rails db:migrate
 ```
-As Devise added routes for our users, we should locate the sign-up route.
+As Devise added routes for our users, we should locate the sign-up route.<br/>
 Look for a URI that says /users/sign_up (it will be a GET request):
 ```
 rails routes
@@ -205,7 +205,7 @@ User.create!(email: 'harry@example.com', first_name: 'Harry', last_name: 'Potter
 ```
 We cannot run rails db:seed as we have a clash with data already in the database.
 `Validation failed: Email has already been taken.`
-This is because it is trying to seed the admin user again and the email is already used.
+This is because it is trying to seed the admin user again and the email is already used.<br/>
 We will reset the database instead (this will drop and the create fresh databases):
 ```
 rails db:reset
@@ -232,7 +232,7 @@ Start the rails console:
 ```
 rails c
 ```
-Then in the rails console search for all users (this does not include admin users):
+Then in the rails console search for all users (this does not include admin users):<br/>
 You should see 1 user with the details matching the seed details.
 ```
 User.all
@@ -267,3 +267,25 @@ The sign out is a button and requires an extra argument of 'method: delete' as i
 ```
 Now we should be able to login as a user with email: 'harry@example.com' and password: 'password'.
 The page will show we are logged in and provide a logout button that will should all the other links when we are logged out.
+## Accessing User Attributes
+Let's give our user a custom weclome message when they are signed in:<br />
+We want to say 'Welcome back `<users_full_name>`'.
+Begin by updating the home controller located at app/controllers/home_controller.rb,<br />
+we want to create a fullname variable in the index action:<br />
+Here we have appended (joined) the user's first name with a space followed by their last name.<br />
+This concept is known as string concatentation.
+```
+def index
+  @fullname = current_user.first_name + ' ' + current_user.last_name
+end
+```
+Now modifying the app/views/index.html.erb to contain:<br />
+Variables (fullname) prepended with an @ symbol are accesible from the accosiated controller.
+```
+<% if user_signed_in? %>
+    Welcome back <%= @fullname %>!
+    <br />
+    <%= button_to('Logout', destroy_user_session_path, method: :delete) %>
+<% else %>
+```
+## Adding Products using Scaffold
