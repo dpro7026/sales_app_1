@@ -276,7 +276,9 @@ Here we have appended (joined) the user's first name with a space followed by th
 This concept is known as string concatentation.
 ```
 def index
-  @fullname = current_user.first_name + ' ' + current_user.last_name
+  if user_signed_in?
+      @fullname = current_user.first_name + ' ' + current_user.last_name
+  end
 end
 ```
 Now modifying the app/views/index.html.erb to contain:<br />
@@ -289,3 +291,116 @@ Variables (fullname) prepended with an @ symbol are accesible from the accosiate
 <% else %>
 ```
 ## Adding Products using Scaffold
+Create a Product table in the database with a category column (of type string) and a price column (of type decimal).<br />
+Using a rails scaffold generator it creates migration files, a model, CRUD views and an asscoiated controller<br />
+with actions pre-defined for each CRUD operation. (CRUD = Create, Read, Update and Destroy)
+```
+rails generate scaffold Product category:string price:decimal 
+```
+Run the migration to generate the table in our Postgresql database:
+```
+rails db:migrate
+```
+Refactor the /db/seeds.rb file to include 2 new products:<br />
+We refactor our code into a block that only checks once if the environment is development.<br />
+This abides by Rails DRY (Don't Repeat Yourself) property.
+```
+if Rails.env.development?
+    # Create a default admin
+    AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
+    # Create a default user
+    User.create!(email: 'harry@example.com', first_name: 'Harry', last_name: 'Potter', password: 'password', password_confirmation: 'password')
+    # Create a default product
+    Product.create!(category: '', price: 9.99)
+    Product.create!(category: 'Car', price: 19990)
+end
+```
+Reset the database to include the new seeds:<br/ >
+(Ensure the app is not running at this time)
+```
+rails db:reset
+```
+Add a link to the top of the homepage (app/views/home/index.html.erb) to view all products:
+```
+<!-- Link to Products Page -->
+<%= link_to("View All Products", products_path) %><br />
+```
+## Update Product Attributes
+Now start the rails server and click the 'View All Products' link.<br />
+We can see the first product has no category as provided in the seeds.<br />
+You can try editing and deleting if you wish.<br />
+Now let's ensure the cateogry (and price) can't be blank and can only be 1 of 3 categories:<br />
+Update the app/models/product.rb file as below:
+```
+class Product < ApplicationRecord
+    validates :price, presence: true
+    validates :category, presence: true
+    # category can only be one of the following 3 types
+    enum category: { 
+        book: 0, 
+        car: 1, 
+        software: 2 
+    }
+end
+```
+We need to add a new migration file, as you should only ever add more migrations never edit previous ones.<br />
+You can imagine migrations are transactions in a ledger, to process a refund a new negative transaction is made.
+```
+rails g migration ChangeColumnsForProducts
+```
+Update the new migration file (located at db/migrations/`<timestamp>`change_columns_for_products.rb) to:<br />
+This will remove the old column which expected string (textual) format and replace it with a integer column.
+```
+def change
+  remove_column :products, :category
+  add_column :products, :category, :integer, index: true
+end
+```
+Now our seeds must be updated as follows:
+```
+if Rails.env.development?
+    # Create a default admin
+    AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
+    # Create a default user
+    User.create!(email: 'harry@example.com', first_name: 'Harry', last_name: 'Potter', password: 'password', password_confirmation: 'password')
+    # Create default products
+    Product.create!(price: 9.99).book!
+    Product.new(price: 19990).car!
+    Product.new(price: 99.99).software!
+    #Product.create!(category: 0, price: 9.99) is the same as Product.create!(price: 9.99).book!
+    # We prefer to use the enum method for modifying/creating for readability
+end
+```
+By creating enum values in the Product model we have access to some nice methods.<br />
+One method is humanize, which will capitalise our enum attributes.<br />
+Update the show.html and index.html in app/views/products/:
+```
+# replace product.category with product.category.humanize
+```
+Now using our web app let's create a new car (ensure you type 'car' with no spaces and no capital letters).<br />
+Now try making a new product with category 'Car' and we get an error.<br />
+Time to change the selection method in the form helper for Products (app/views/products/_form.html.erb) to a dropdown:
+```
+# Change from:
+# <%= form.label :category %>
+# <%= form.text_field :category, id: :product_category %>
+# To:
+<%= form.select(:category, [['Book', 'book'], ['Car', 'car'], ['Software', 'software']]) %>
+```
+Format the price using built in method number_to_currency() in show.html and index.html in app/views/products/:<br />
+In show.html.erb make sure to use @product.price (prepend the @).
+```
+# Previously: <td><%= product.price %></td>
+<td><%= number_to_currency(product.price, precision: 2, delimiter: ",") %></td>
+```
+
+<strong>Awesome that's the second checkpoint complete!</strong><br/>
+To summarize we have: 
+* Generated users with Devise (create, read, update and delete operations)
+* Updated our seeds to include default users and default products
+* Learnt how to use the rails console to manipulate data in the database (using an ORM instead of native SQL commands)
+* Refactored our homepage view code to abide by Rails Don't Repaet Yourself (DRY) principle
+* Generated products using a scaffold (which create migartion file, model, controller and views for us)
+* Used some helpful methods such as signed_in?, Enum.humanize, Model.`<enum_name>`!, number_to_currency()
+
+<strong>As promised in the next section we make the app look good!</strong><br/>
