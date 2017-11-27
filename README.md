@@ -401,6 +401,6 @@ To summarize we have:
 * Learnt how to use the rails console to manipulate data in the database (using an ORM instead of native SQL commands)
 * Refactored our homepage view code to abide by Rails Don't Repaet Yourself (DRY) principle
 * Generated products using a scaffold (which create migartion file, model, controller and views for us)
-* Used some helpful methods such as signed_in?, Enum.humanize, Model.`<enum_name>`!, number_to_currency()
+* Used some helpful methods such as signed_in?, Enum.humanize, number_to_currency()
 
 <strong>As promised in the next section we make the app look good!</strong><br/>

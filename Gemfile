@@ -37,6 +37,11 @@ gem 'jbuilder', '~> 2.5'
 gem 'devise', '~> 4.3'
 # For managing admins
 gem 'activeadmin', '~> 1.1'
+# Add Bootstrap 2 and 3 CSS styling (note: Bootstrap 4 not supported by this gem)
+gem 'bootstrap-sass', '~> 3.3.7'
+# Rails 5+ does not include this gem by default but Bootstrap requires it
+gem 'jquery-rails'
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
